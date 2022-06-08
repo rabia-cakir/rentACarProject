@@ -62,6 +62,7 @@ public class CarManager implements CarService {
 			carRequest.setDescription(car.getDescription());
 			carRequest.setBrandId(car.getBrand().getId());
 			carRequest.setColorId(car.getColor().getId());
+			carRequests.add(carRequest);
 		}
 		
 		return carRequests;
@@ -96,6 +97,7 @@ public class CarManager implements CarService {
 			foundCar.setColor(car.getColor());
 			foundCar.setDailyPrice(car.getDailyPrice());
 			foundCar.setDescription(car.getDescription());
+			carRepository.save(foundCar);
 		}
 		
 	}
