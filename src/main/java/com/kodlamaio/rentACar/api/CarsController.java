@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.CarService;
 import com.kodlamaio.rentACar.business.requests.cars.CreateCarRequest;
+import com.kodlamaio.rentACar.business.requests.cars.UpdateCarRequest;
+import com.kodlamaio.rentACar.business.responses.cars.CarResponse;
+import com.kodlamaio.rentACar.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/cars")
@@ -26,13 +29,13 @@ public class CarsController {
 	}
 	
 	@PostMapping("/add")
-	public void add(@RequestBody CreateCarRequest createCarRequest)
+	public Result add(@RequestBody CreateCarRequest createCarRequest)
 	{
-		carService.add(createCarRequest);
+		return carService.add(createCarRequest);
 	}
 	
 	@GetMapping("/getall")
-	public List<CreateCarRequest> getAll()
+	public List<CarResponse> getAll()
 	{
 		return carService.getAll();
 	}
@@ -45,8 +48,8 @@ public class CarsController {
 	}
 	
 	@PutMapping("/{id}")
-	public void update(@PathVariable int id, @RequestBody CreateCarRequest createCarRequest )
+	public void update(@PathVariable int id, @RequestBody UpdateCarRequest updateCarRequest )
 	{
-		carService.update(createCarRequest, id);
+		carService.update(updateCarRequest, id);
 	}
 }

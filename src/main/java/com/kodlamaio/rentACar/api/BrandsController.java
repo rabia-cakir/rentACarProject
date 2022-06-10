@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.BrandService;
 import com.kodlamaio.rentACar.business.requests.brands.CreateBrandRequest;
+import com.kodlamaio.rentACar.business.requests.brands.UpdateBrandRequest;
+import com.kodlamaio.rentACar.business.responses.brands.BrandResponse;
+import com.kodlamaio.rentACar.core.utilities.results.DataResult;
+import com.kodlamaio.rentACar.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/brands")
@@ -26,27 +30,28 @@ public class BrandsController {
 	}
 
 	@GetMapping("/getall")
-	public List<CreateBrandRequest> getAll()
+	public List<BrandResponse> getAll()
 	{
 		return brandService.getAll();
 	}
 	
+	
 	@PostMapping("/add")
-	public void add(@RequestBody CreateBrandRequest createBrandRequest)
+	public Result add(@RequestBody CreateBrandRequest createBrandRequest)
 	{
-		brandService.add(createBrandRequest);
+		return brandService.add(createBrandRequest);
 	}
 	
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable int id)
+	public Result delete(@PathVariable int id)
 	{
-		brandService.deleteById(id);
+		return brandService.deleteById(id);
 	}
 	
 	@PutMapping("/{id}")
-	public void update(@PathVariable int id, @RequestBody CreateBrandRequest createBrandRequest)
+	public Result update(@PathVariable int id, @RequestBody UpdateBrandRequest updateBrandRequest)
 	{
-		brandService.update(createBrandRequest, id);
+		return brandService.update(updateBrandRequest, id);
 	}
 
 }

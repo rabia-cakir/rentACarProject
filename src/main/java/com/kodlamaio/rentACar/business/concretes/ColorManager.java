@@ -3,12 +3,16 @@ package com.kodlamaio.rentACar.business.concretes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.ColorService;
 import com.kodlamaio.rentACar.business.requests.colors.CreateColorRequest;
+import com.kodlamaio.rentACar.business.requests.colors.UpdateColorRequest;
+import com.kodlamaio.rentACar.business.responses.brands.BrandResponse;
+import com.kodlamaio.rentACar.business.responses.colors.ColorResponse;
 import com.kodlamaio.rentACar.dataAccess.abstracts.ColorRepository;
 import com.kodlamaio.rentACar.entities.concretes.Color;
 
@@ -36,27 +40,21 @@ public class ColorManager implements ColorService {
 		colorRepository.deleteById(id);
 	}
 
+	
 	@Override
-	public List<CreateColorRequest> getAll() {
+	public List<ColorResponse> getAll() {
 		List<Color> colors=colorRepository.findAll();
-		List<CreateColorRequest> colorRequests=new ArrayList<>();
-		CreateColorRequest colorRequest=new CreateColorRequest();
-		
-		for(Color color:colors)
-		{
-			colorRequest.setName(color.getName());
-			colorRequests.add(colorRequest);
-		}
-		
-		return colorRequests;
+		return colors.stream().map(c->new ColorResponse(c)).collect(Collectors.toList());
 		
 	}
 
+	
 	@Override
-	public void update(CreateColorRequest createColorRequest, int id) {
+	public void update(UpdateColorRequest updateColorRequest, int id) {
 		//mapping
 		Color color=new Color();
-		color.setName(createColorRequest.getName());
+		color.setName(updateColorRequest.getName());
+		
 		Optional<Color> currentColor=colorRepository.findById(id);
 		if(currentColor.isPresent())
 		{
@@ -66,6 +64,12 @@ public class ColorManager implements ColorService {
 			
 		}
 		
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Color getColorById(int id) {
+		return colorRepository.getById(id);
 	}
 	
 	
