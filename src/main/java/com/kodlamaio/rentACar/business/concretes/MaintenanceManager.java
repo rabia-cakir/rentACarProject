@@ -10,24 +10,27 @@ import com.kodlamaio.rentACar.business.abstracts.CarService;
 import com.kodlamaio.rentACar.business.abstracts.MaintenanceService;
 import com.kodlamaio.rentACar.business.requests.maintenance.CreateMaintenanceRequest;
 import com.kodlamaio.rentACar.business.requests.maintenance.UpdateMaintenanceRequest;
+import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
 import com.kodlamaio.rentACar.dataAccess.abstracts.MaintenanceRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
 import com.kodlamaio.rentACar.entities.concretes.Maintenance;
-
+//BAK
 @Service
 public class MaintenanceManager implements MaintenanceService {
 
 	private MaintenanceRepository maintenanceRepository;
 	private CarService carService;
+	private ModelMapperService modelMapperService;
 	LocalDate currentDate = LocalDate.now();
 
 	@Autowired
-	public MaintenanceManager(MaintenanceRepository maintenanceRepository, CarService carService) {
+	public MaintenanceManager(MaintenanceRepository maintenanceRepository, CarService carService, ModelMapperService modelMapperService) {
 		super();
 		this.maintenanceRepository = maintenanceRepository;
 		this.carService = carService;
+		this.modelMapperService=modelMapperService;
 	}
 
 	// maintenance'a gelen araba gelecek
@@ -37,9 +40,10 @@ public class MaintenanceManager implements MaintenanceService {
 	@Override
 	public Result add(CreateMaintenanceRequest createMaintenanceRequest, int carId) {
 		// mapping
-		Maintenance maintenance = new Maintenance();
+		Maintenance maintenance=this.modelMapperService.forRequest().map(createMaintenanceRequest, Maintenance.class);
+		//Maintenance maintenance = new Maintenance();
 		maintenance.setDateSent(currentDate);
-		Car car = new Car();
+		Car car = carService.getById(createMaintenanceRequest.getCarId());
 		car.setId(createMaintenanceRequest.getCarId());
 		car.setState(2);
 		maintenance.setCar(car);

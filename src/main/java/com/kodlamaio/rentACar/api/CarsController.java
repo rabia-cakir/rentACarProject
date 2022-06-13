@@ -2,6 +2,8 @@ package com.kodlamaio.rentACar.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +31,7 @@ public class CarsController {
 	}
 	
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateCarRequest createCarRequest)
+	public Result add(@RequestBody @Valid CreateCarRequest createCarRequest)
 	{
 		return carService.add(createCarRequest);
 	}

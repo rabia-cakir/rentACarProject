@@ -1,0 +1,72 @@
+package com.kodlamaio.rentACar.business.concretes;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.kodlamaio.rentACar.business.abstracts.AdditionalServiceItemService;
+import com.kodlamaio.rentACar.business.requests.additionalServiceItemRequests.CreateAdditionalServiceItemRequest;
+import com.kodlamaio.rentACar.business.requests.additionalServiceItemRequests.UpdateAdditionalServiceItemRequest;
+import com.kodlamaio.rentACar.business.responses.additionalServiceItems.AdditionalServiceItemResponse;
+import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
+import com.kodlamaio.rentACar.core.utilities.results.DataResult;
+import com.kodlamaio.rentACar.core.utilities.results.Result;
+import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
+import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
+import com.kodlamaio.rentACar.dataAccess.abstracts.AdditionalServiceItemRepository;
+import com.kodlamaio.rentACar.entities.concretes.AdditionalServiceItem;
+
+@Service
+public class AdditionalServiceItemManager implements AdditionalServiceItemService{
+	
+	private AdditionalServiceItemRepository additionalServiceItemRepository;
+	private ModelMapperService modelMapperService;
+	
+	
+
+	public AdditionalServiceItemManager( AdditionalServiceItemRepository additionalServiceItemRepository,
+			ModelMapperService modelMapperService) {
+		super();
+		this.additionalServiceItemRepository = additionalServiceItemRepository;
+		this.modelMapperService = modelMapperService;
+	}
+
+	@Override
+	public Result add(CreateAdditionalServiceItemRequest createAdditionalServiceItemRequest) {
+		AdditionalServiceItem additionalServiceItem=modelMapperService.forRequest().map(createAdditionalServiceItemRequest, AdditionalServiceItem.class);
+		additionalServiceItemRepository.save(additionalServiceItem);
+		return new SuccessResult();
+	}
+
+	@Override
+	public Result update(UpdateAdditionalServiceItemRequest updateAdditionalServiceItemRequest) {
+		AdditionalServiceItem additionalServiceItem=modelMapperService.forRequest().map(updateAdditionalServiceItemRequest, AdditionalServiceItem.class);
+		additionalServiceItemRepository.save(additionalServiceItem);
+		return new SuccessResult();
+	}
+
+	@Override
+	public Result delete(int id) {
+		additionalServiceItemRepository.deleteById(id);
+		return new SuccessResult();
+	}
+
+	@Override
+	public DataResult<AdditionalServiceItemResponse> findById(int id) {
+		AdditionalServiceItem additionalServiceItem=additionalServiceItemRepository.findById(id).get();
+		AdditionalServiceItemResponse additionalServiceItemResponse=modelMapperService.forResponse().map(additionalServiceItem, AdditionalServiceItemResponse.class);
+		return new SuccessDataResult<AdditionalServiceItemResponse>(additionalServiceItemResponse);
+	}
+
+	@Override
+	public DataResult<List<AdditionalServiceItemResponse>> getAll() {
+		List<AdditionalServiceItem> additionalServiceItems=additionalServiceItemRepository.findAll();
+		List<AdditionalServiceItemResponse> additionalServiceItemResponses=additionalServiceItems.stream().map(
+				additionalServiceItem->modelMapperService.forResponse().map(additionalServiceItem, AdditionalServiceItemResponse.class))
+				.collect(Collectors.toList());
+				
+		return new SuccessDataResult<List<AdditionalServiceItemResponse>>(additionalServiceItemResponses);
+	}
+
+}
