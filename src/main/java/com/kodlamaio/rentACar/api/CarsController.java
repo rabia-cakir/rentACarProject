@@ -17,41 +17,36 @@ import com.kodlamaio.rentACar.business.abstracts.CarService;
 import com.kodlamaio.rentACar.business.requests.cars.CreateCarRequest;
 import com.kodlamaio.rentACar.business.requests.cars.UpdateCarRequest;
 import com.kodlamaio.rentACar.business.responses.cars.CarResponse;
+import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/cars")
 public class CarsController {
-	
+
 	private CarService carService;
-	
-	public CarsController(CarService carService)
-	{
-		this.carService=carService;
+
+	public CarsController(CarService carService) {
+		this.carService = carService;
 	}
-	
+
 	@PostMapping("/add")
-	public Result add(@RequestBody @Valid CreateCarRequest createCarRequest)
-	{
+	public Result add(@RequestBody @Valid CreateCarRequest createCarRequest) {
 		return carService.add(createCarRequest);
 	}
-	
+
 	@GetMapping("/getall")
-	public List<CarResponse> getAll()
-	{
+	public DataResult<List<CarResponse>> getAll() {
 		return carService.getAll();
 	}
 
-
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable int id)
-	{
-		carService.deleteById(id);
+	public Result delete(@PathVariable int id) {
+		return carService.deleteById(id);
 	}
-	
-	@PutMapping("/{id}")
-	public void update(@PathVariable int id, @RequestBody UpdateCarRequest updateCarRequest )
-	{
-		carService.update(updateCarRequest, id);
+
+	@PutMapping("/update")
+	public Result update(@RequestBody UpdateCarRequest updateCarRequest) {
+		return carService.update(updateCarRequest);
 	}
 }

@@ -40,7 +40,7 @@ public class AdditionalServicesController {
 		return this.additionalServiceService.add(createAdditionalService);
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/update")
 	public Result update(@RequestBody UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
 		return this.additionalServiceService.update(updateAdditionalServiceRequest);
 	}

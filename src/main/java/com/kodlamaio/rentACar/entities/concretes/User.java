@@ -1,11 +1,15 @@
 package com.kodlamaio.rentACar.entities.concretes;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import javax.persistence.Column;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -42,5 +46,11 @@ public class User {
 
     @Column(name = "password")
     private String password;
+    
+    @Column(name="birth_date")
+	private LocalDate birthDate;	
+    
+    @OneToMany(mappedBy = "userId")
+	private List<Rental> rentals;
 }
 

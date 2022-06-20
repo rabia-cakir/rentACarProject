@@ -1,50 +1,49 @@
 package com.kodlamaio.rentACar.business.concretes;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kodlamaio.rentACar.business.abstracts.CarService;
 import com.kodlamaio.rentACar.business.abstracts.MaintenanceService;
 import com.kodlamaio.rentACar.business.requests.maintenance.CreateMaintenanceRequest;
 import com.kodlamaio.rentACar.business.requests.maintenance.UpdateMaintenanceRequest;
+import com.kodlamaio.rentACar.business.responses.maintenances.MaintenanceResponse;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
+import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
+import com.kodlamaio.rentACar.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.rentACar.core.utilities.results.SuccessResult;
+import com.kodlamaio.rentACar.dataAccess.abstracts.CarRepository;
 import com.kodlamaio.rentACar.dataAccess.abstracts.MaintenanceRepository;
 import com.kodlamaio.rentACar.entities.concretes.Car;
 import com.kodlamaio.rentACar.entities.concretes.Maintenance;
-//BAK
+
 @Service
 public class MaintenanceManager implements MaintenanceService {
 
 	private MaintenanceRepository maintenanceRepository;
-	private CarService carService;
+	private CarRepository carRepository;
 	private ModelMapperService modelMapperService;
 	LocalDate currentDate = LocalDate.now();
 
 	@Autowired
-	public MaintenanceManager(MaintenanceRepository maintenanceRepository, CarService carService, ModelMapperService modelMapperService) {
+	public MaintenanceManager(MaintenanceRepository maintenanceRepository, CarRepository carRepository,
+			ModelMapperService modelMapperService) {
 		super();
 		this.maintenanceRepository = maintenanceRepository;
-		this.carService = carService;
-		this.modelMapperService=modelMapperService;
+		this.carRepository = carRepository;
+		this.modelMapperService = modelMapperService;
 	}
-
-	// maintenance'a gelen araba gelecek
-	// durumu 2, yani bakımda olacak
-	// datesent güncellenecek
 
 	@Override
 	public Result add(CreateMaintenanceRequest createMaintenanceRequest, int carId) {
-		// mapping
-		Maintenance maintenance=this.modelMapperService.forRequest().map(createMaintenanceRequest, Maintenance.class);
-		//Maintenance maintenance = new Maintenance();
+		Maintenance maintenance = this.modelMapperService.forRequest().map(createMaintenanceRequest, Maintenance.class);
 		maintenance.setDateSent(currentDate);
-		Car car = carService.getById(createMaintenanceRequest.getCarId());
-		car.setId(createMaintenanceRequest.getCarId());
+		Car car = carRepository.getById(createMaintenanceRequest.getCarId());
 		car.setState(2);
 		maintenance.setCar(car);
 		maintenanceRepository.save(maintenance);
@@ -54,19 +53,11 @@ public class MaintenanceManager implements MaintenanceService {
 
 	@Override
 	public Result update(int id, UpdateMaintenanceRequest updateMaintenanceRequest) {
-		// mapping
-
-		/*
-		 * if(checkIfMaintenanceIdExists(updateMaintenanceRequest.getId())) {
-		 * Maintenance updateMaintenance=new Maintenance(); Car
-		 * car=carService.getById(updateMaintenanceRequest.getCarId());
-		 * updateMaintenance.setCar(car); if(car.getState()==2) car.setState(1);
-		 */
 
 		Optional<Maintenance> maintenance = maintenanceRepository.findById(id);
 		if (maintenance.isPresent()) {
 			Maintenance updateMaintenance = maintenance.get();
-			Car car = carService.getById(updateMaintenanceRequest.getCarId());
+			Car car = carRepository.getById(updateMaintenanceRequest.getCarId());
 			if (car.getState() == 2) {
 				car.setState(1);
 				updateMaintenance.setCar(car);
@@ -74,15 +65,30 @@ public class MaintenanceManager implements MaintenanceService {
 			}
 		}
 
-		return new SuccessResult();
+		return new SuccessResult("MAINTENANCE.UPDATED");
 	}
 
-/*	public boolean checkIfMaintenanceIdExists(int id) {
-		boolean exist = true;
-		if (!this.maintenanceRepository.existsById(id)) {
-			exist = false;
-		}
-		return exist;
+	@Override
+	public DataResult<List<MaintenanceResponse>> getAll() {
+		List<Maintenance> maintenances = maintenanceRepository.findAll();
+		List<MaintenanceResponse> response = maintenances.stream()
+				.map(maintenance -> modelMapperService.forResponse().map(maintenance, MaintenanceResponse.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<MaintenanceResponse>>(response, "DATA.LISTED.SUCCESSFULLY");
 	}
-*/
+
+	@Override
+	public Result delete(int id) {
+		maintenanceRepository.deleteById(id);
+		return new SuccessResult("MAINTENANCE.DELETED");
+	}
+
+	@Override
+	public DataResult<MaintenanceResponse> getById(int id) {
+		Maintenance maintenance = maintenanceRepository.getById(id);
+		return new SuccessDataResult<MaintenanceResponse>(
+				modelMapperService.forResponse().map(maintenance, MaintenanceResponse.class));
+	}
+
 }

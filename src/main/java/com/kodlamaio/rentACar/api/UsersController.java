@@ -49,9 +49,9 @@ public class UsersController {
 		return userService.add(createUserRequest);
 	}
 
-	@PutMapping("/{id}")
-	public Result update(@RequestBody UpdateUserRequest updateUserRequest, @PathVariable int id) {
-		return userService.update(updateUserRequest, id);
+	@PutMapping("/update")
+	public Result update(@RequestBody UpdateUserRequest updateUserRequest) {
+		return userService.update(updateUserRequest);
 	}
 
 	@GetMapping("/page/{pageNo}")

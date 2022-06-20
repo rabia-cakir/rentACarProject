@@ -9,7 +9,7 @@ import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
 public interface AdditionalServiceItemService {
-	
+
 	Result add(CreateAdditionalServiceItemRequest createAdditionalServiceItemRequest);
 
 	Result update(UpdateAdditionalServiceItemRequest updateAdditionalServiceItemRequest);

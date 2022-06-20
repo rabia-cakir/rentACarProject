@@ -19,20 +19,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 @Entity
-@Table(name="brands")
+@Table(name = "brands")
 public class Brand {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
-	
-	@Column(name="name")
-	private String name;
-	
-	@OneToMany(mappedBy="brand")
-	List<Car> cars;
-	
 
+	@Column(name = "name")
+	private String name;
+
+	@OneToMany(mappedBy = "brand")
+	List<Car> cars;
 
 }

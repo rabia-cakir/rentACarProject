@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateAdditionalServiceItemRequest {
+	private int id;
 	private String name;
 	private double price;
 

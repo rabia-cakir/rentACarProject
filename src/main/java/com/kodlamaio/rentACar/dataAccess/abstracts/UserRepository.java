@@ -6,6 +6,6 @@ import com.kodlamaio.rentACar.entities.concretes.User;
 
 public interface UserRepository extends JpaRepository<User,Integer>{
 	
-	
+	User findByName(String name);
 
 }

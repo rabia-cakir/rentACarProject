@@ -32,7 +32,7 @@ public class RentACarApplication {
 	}
 	
 	@ExceptionHandler
-	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
+	@ResponseStatus(code=HttpStatus.BAD_REQUEST)//500 hatası dönüyor
 	public ErrorDataResult<Object> handleBusinessException(BusinessException businessException)
 	{
 		ErrorDataResult<Object> errorDataResult=new ErrorDataResult<Object>(businessException.getMessage(),"BUSINESS.EXCEPTION");
@@ -43,12 +43,13 @@ public class RentACarApplication {
 	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
 	public ErrorDataResult<Object> handleValidationException(MethodArgumentNotValidException methodArgumentNotValidException)
 	{
+		//hangi alanda hata oldu, hata ne
 		Map<String,String> validationErrors=new HashMap<String,String>();
-		for(FieldError fieldError:methodArgumentNotValidException.getBindingResult().getFieldErrors())
+		for(FieldError fieldError:methodArgumentNotValidException.getBindingResult().getFieldErrors())//hataları for each'le dönüyoruz
 		{
-			validationErrors.put(fieldError.getField(),fieldError.getDefaultMessage());
+			validationErrors.put(fieldError.getField(),fieldError.getDefaultMessage());//her hata map olarak tanımladığımız validationErrors' ekleniyor.
 		}
-		ErrorDataResult<Object> errorDataResult=new ErrorDataResult<Object>(validationErrors, "VALIDATION.EXCEPTION");
+		ErrorDataResult<Object> errorDataResult=new ErrorDataResult<Object>(validationErrors, "VALIDATION.EXCEPTION");//validation'ı errordata result'a çeviriyoruz.
 		return errorDataResult;
 	
 		

@@ -11,12 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RentalResponse {
 	private int id;
-	private int totalDays;
-	private double totalPrice;
 	private LocalDate pickUpDate;
 	private LocalDate returnDate;
+	private int totalDays;
+	private double totalPrice;
 	private int carId;
 	private int pickUpCityId;
 	private int returnCityId;
+	private int userId;
 
 }

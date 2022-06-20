@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.kodlamaio.rentACar.entities.concretes.AdditionalServiceItem;
 
 public interface AdditionalServiceItemRepository extends JpaRepository<AdditionalServiceItem, Integer> {
+	
+	AdditionalServiceItem findByName(String name);
 
 }

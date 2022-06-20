@@ -8,12 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateCarRequest {
-	
+
+	private int id;
 	private String description;
 	private double dailyPrice;
 	private String licensePlate;
 	private int kilometer;
 	private int state;
-
+	private int brandId;
+	private int colorId;
+	private int minFindexScore;
 
 }

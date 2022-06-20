@@ -23,47 +23,45 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="cars")
+@Table(name = "cars")
 public class Car {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
-	
-	@Column(name="description")
+
+	@Column(name = "description")
 	private String description;
-	
-	@Column(name="dailyPrice")
+
+	@Column(name = "dailyPrice")
 	private double dailyPrice;
-	
-	@Column(name="license_plate")
+
+	@Column(name = "license_plate")
 	private String licensePlate;
-	
-	@Column(name="kilometer")
+
+	@Column(name = "kilometer")
 	private int kilometer;
-	
-	@Column(name="state")
+
+	@Column(name = "state")
 	private int state;
-	
+
+	@Column(name = "min_findex")
+	private int minFindexScore;
+
 	@ManyToOne
-	@JoinColumn(name="brand_id")
+	@JoinColumn(name = "brand_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Brand brand;
-	
+
 	@ManyToOne
-	@JoinColumn(name="color_id")
+	@JoinColumn(name = "color_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Color color;
-	
+
 	@OneToMany(mappedBy = "car")
 	private List<Maintenance> maintenances;
-	
+
 	@OneToMany(mappedBy = "car")
 	private List<Rental> rentals;
-	
-
-	
-	
-	
 
 }

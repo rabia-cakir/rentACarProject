@@ -15,7 +15,7 @@ public interface UserService {
 	
 	DataResult<List<UserResponse>> getAll();
 	Result add(CreateUserRequest createUserRequest);
-	Result update(UpdateUserRequest updateUserRequest, int id);
+	Result update(UpdateUserRequest updateUserRequest);
 	Result delete(int id);
 	Page<User> findPaginated(int pageNo, int pageSize);
 

@@ -1,5 +1,7 @@
 package com.kodlamaio.rentACar.business.requests.users;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -16,10 +18,11 @@ public class CreateUserRequest {
 
 	@NotBlank(message = "First Name is mandatory")
 	@Size(min = 2)
+	//@Pattern(regexp = "(^[a-zA-Z]{2,50}$)", message = "Name must be of characters")
 	private String name;
 
 	@Size(min = 2)
-	@Pattern(regexp = "(^[a-zA-Z]{2,50}$)", message = "Last Name must be of characters")
+	//@Pattern(regexp = "(^[a-zA-Z]{2,50}$)", message = "Last Name must be of characters")
 	private String lastName;
 
 	@NotBlank(message = "Identity Number is mandatory")
@@ -31,5 +34,7 @@ public class CreateUserRequest {
 	private String email;
 
 	private String password;
+	
+	private LocalDate birthDate;
 
 }

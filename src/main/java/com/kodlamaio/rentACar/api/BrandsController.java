@@ -21,37 +21,32 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/brands")
 public class BrandsController {
-	
+
 	private BrandService brandService;
-	
+
 	public BrandsController(BrandService brandService) {
 		super();
 		this.brandService = brandService;
 	}
 
 	@GetMapping("/getall")
-	public List<BrandResponse> getAll()
-	{
+	public DataResult<List<BrandResponse>> getAll() {
 		return brandService.getAll();
 	}
-	
-	
+
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateBrandRequest createBrandRequest)
-	{
+	public Result add(@RequestBody CreateBrandRequest createBrandRequest) {
 		return brandService.add(createBrandRequest);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public Result delete(@PathVariable int id)
-	{
+	public Result delete(@PathVariable int id) {
 		return brandService.deleteById(id);
 	}
-	
-	@PutMapping("/{id}")
-	public Result update(@PathVariable int id, @RequestBody UpdateBrandRequest updateBrandRequest)
-	{
-		return brandService.update(updateBrandRequest, id);
+
+	@PutMapping("/update")
+	public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) {
+		return brandService.update(updateBrandRequest);
 	}
 
 }

@@ -8,4 +8,5 @@ import com.kodlamaio.rentACar.entities.concretes.AdditionalService;
 
 public interface AdditionalServiceRepository extends JpaRepository<AdditionalService, Integer> {
 	List<AdditionalService> findAllByRentalId(int rentalId);
+
 }
