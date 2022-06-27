@@ -33,7 +33,6 @@ public class AdditionalService {
 	@JoinColumn(name = "rental_id")
 	private Rental rental;
 
-	@OneToOne(mappedBy = "additionalService")
-	private Invoice invoice;
+
 
 }

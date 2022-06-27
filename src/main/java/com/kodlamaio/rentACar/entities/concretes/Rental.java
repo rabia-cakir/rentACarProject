@@ -53,13 +53,16 @@ public class Rental {
 	@JoinColumn(name="return_city_id")
 	private City returnCity;
 	
+	@ManyToOne
+	@JoinColumn(name="customer_id")
+	private Customer customer;
+	
 	@OneToMany(mappedBy = "rental")
 	private List<AdditionalService> additionalServices;
 
 	@OneToOne(mappedBy = "rental")	
 	private Invoice invoice;
 	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User userId;
+
+	
 }

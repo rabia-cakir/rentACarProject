@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kodlamaio.rentACar.business.concretes.InvoiceRentalManager;
-import com.kodlamaio.rentACar.business.requests.invoices.CreateInvoiceRentalRequest;
-import com.kodlamaio.rentACar.business.responses.invoices.InvoiceAdditionalServiceResponse;
-import com.kodlamaio.rentACar.business.responses.invoices.InvoiceRentalResponse;
+import com.kodlamaio.rentACar.business.concretes.InvoiceManager;
+import com.kodlamaio.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
+import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceAdditionalServiceResponse;
+import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceRentalResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
@@ -21,26 +21,26 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 @RequestMapping("/api/invoice")
 public class InvoicesController {
 
-	private InvoiceRentalManager invoiceRentalManager;
+	private InvoiceManager invoiceRentalManager;
 
-	public InvoicesController(InvoiceRentalManager invoiceRentalManager) {
+	public InvoicesController(InvoiceManager invoiceRentalManager) {
 		super();
 		this.invoiceRentalManager = invoiceRentalManager;
 	}
 
-	@GetMapping("/getallRentalInvoice")
-	public DataResult<List<InvoiceRentalResponse>> getAllRentalInvoice() {
+	@GetMapping("/getRentalInvoice")
+	public DataResult<List<InvoiceRentalResponse>> getRentalInvoice() {
 		return invoiceRentalManager.getAllRentalInvoice();
 	}
 
-	@GetMapping("/getallRentalAdditionalServiceInvoice")
-	public DataResult<List<InvoiceAdditionalServiceResponse>> getAllAdditionalServiceInvoice() {
+	@GetMapping("/getRentalAdditionalServiceInvoice")
+	public DataResult<List<InvoiceAdditionalServiceResponse>> getAdditionalServiceInvoice() {
 		return invoiceRentalManager.getAllAdditionalServiceInvoice();
 	}
 
 	
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateInvoiceRentalRequest createInvoiceRentalRequest) {
+	public Result add(@RequestBody CreateInvoiceRequest createInvoiceRentalRequest) {
 		return invoiceRentalManager.add(createInvoiceRentalRequest);
 	}
 

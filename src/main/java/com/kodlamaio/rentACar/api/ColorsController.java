@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.ColorService;
-import com.kodlamaio.rentACar.business.requests.colors.CreateColorRequest;
-import com.kodlamaio.rentACar.business.requests.colors.UpdateColorRequest;
-import com.kodlamaio.rentACar.business.responses.colors.ColorResponse;
+import com.kodlamaio.rentACar.business.requests.colorRequests.CreateColorRequest;
+import com.kodlamaio.rentACar.business.requests.colorRequests.UpdateColorRequest;
+import com.kodlamaio.rentACar.business.responses.colorResponses.ColorResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 

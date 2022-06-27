@@ -34,7 +34,4 @@ public class Invoice {
 	@JoinColumn(name = "rental_id", unique = true)
 	private Rental rental;
 
-	@OneToOne
-	@JoinColumn(name = "additional_service_id", unique = true)
-	private AdditionalService additionalService;
 }

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.CityService;
-import com.kodlamaio.rentACar.business.requests.cities.CreateCityRequest;
-import com.kodlamaio.rentACar.business.requests.cities.UpdateCityRequest;
-import com.kodlamaio.rentACar.business.responses.cities.CityResponse;
+import com.kodlamaio.rentACar.business.requests.cityRequests.CreateCityRequest;
+import com.kodlamaio.rentACar.business.requests.cityRequests.UpdateCityRequest;
+import com.kodlamaio.rentACar.business.responses.cityResponses.CityResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 

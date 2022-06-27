@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.MaintenanceService;
-import com.kodlamaio.rentACar.business.requests.maintenance.CreateMaintenanceRequest;
-import com.kodlamaio.rentACar.business.requests.maintenance.UpdateMaintenanceRequest;
-import com.kodlamaio.rentACar.business.responses.maintenances.MaintenanceResponse;
+import com.kodlamaio.rentACar.business.requests.maintenanceRequests.CreateMaintenanceRequest;
+import com.kodlamaio.rentACar.business.requests.maintenanceRequests.UpdateMaintenanceRequest;
+import com.kodlamaio.rentACar.business.responses.maintenanceResponses.MaintenanceResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
@@ -35,9 +34,9 @@ public class MaintenancesController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateMaintenanceRequest createMaintenanceRequest, @RequestParam int carId) {
+	public Result add(@RequestBody CreateMaintenanceRequest createMaintenanceRequest) {
 
-		return maintenanceService.add(createMaintenanceRequest, carId);
+		return maintenanceService.add(createMaintenanceRequest);
 
 	}
 
@@ -46,9 +45,9 @@ public class MaintenancesController {
 		return maintenanceService.delete(id);
 	}
 
-	@PutMapping("/{id}")
-	public Result update(@PathVariable int id, @RequestBody UpdateMaintenanceRequest updateMaintenanceRequest) {
-		return maintenanceService.update(id, updateMaintenanceRequest);
+	@PutMapping("/update")
+	public Result update(@RequestBody UpdateMaintenanceRequest updateMaintenanceRequest) {
+		return maintenanceService.update(updateMaintenanceRequest);
 
 	}
 }

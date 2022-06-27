@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.CityService;
-import com.kodlamaio.rentACar.business.requests.cities.CreateCityRequest;
-import com.kodlamaio.rentACar.business.requests.cities.UpdateCityRequest;
-import com.kodlamaio.rentACar.business.responses.cities.CityResponse;
+import com.kodlamaio.rentACar.business.requests.cityRequests.CreateCityRequest;
+import com.kodlamaio.rentACar.business.requests.cityRequests.UpdateCityRequest;
+import com.kodlamaio.rentACar.business.responses.cityResponses.CityResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
@@ -32,11 +32,12 @@ public class CityManager implements CityService {
 	}
 
 	@Override
-	public Result add(CreateCityRequest createCityRequest) {
-		checkIfCityExistByName(createCityRequest.getName());
-		City city = this.modelMapperService.forRequest().map(createCityRequest, City.class);
-		this.cityRepository.save(city);
-		return new SuccessResult("CITY.ADDED");
+	public DataResult<List<CityResponse>> getAll() {
+		List<City> cities = cityRepository.findAll();
+		List<CityResponse> response = cities.stream()
+				.map(city -> modelMapperService.forRequest().map(city, CityResponse.class))
+				.collect(Collectors.toList());
+		return new SuccessDataResult<List<CityResponse>>(response, "DATA.LISTED.SUCCESSFULLY");
 	}
 
 	@Override
@@ -47,16 +48,16 @@ public class CityManager implements CityService {
 	}
 
 	@Override
-	public DataResult<List<CityResponse>> getAll() {
-		List<City> cities = cityRepository.findAll();
-		List<CityResponse> response = cities.stream()
-				.map(city -> modelMapperService.forRequest().map(city, CityResponse.class))
-				.collect(Collectors.toList());
-		return new SuccessDataResult<List<CityResponse>>(response, "DATA.LISTED.SUCCESSFULLY");
+	public Result add(CreateCityRequest createCityRequest) {
+		checkIfCityExistByName(createCityRequest.getName());
+		City city = this.modelMapperService.forRequest().map(createCityRequest, City.class);
+		this.cityRepository.save(city);
+		return new SuccessResult("CITY.ADDED");
 	}
 
 	@Override
 	public Result update(UpdateCityRequest updateCityRequest) {
+		checkIfCityExistById(updateCityRequest.getId());
 		checkIfCityExistByName(updateCityRequest.getName());
 		City city = this.modelMapperService.forRequest().map(updateCityRequest, City.class);
 		this.cityRepository.save(city);

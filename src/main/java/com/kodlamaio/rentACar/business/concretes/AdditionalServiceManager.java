@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kodlamaio.rentACar.business.abstracts.AdditionalServiceService;
 import com.kodlamaio.rentACar.business.requests.additionalServiceRequests.CreateAdditionalServiceRequest;
 import com.kodlamaio.rentACar.business.requests.additionalServiceRequests.UpdateAdditionalServiceRequest;
-import com.kodlamaio.rentACar.business.responses.additionalServices.AdditionalServiceResponse;
+import com.kodlamaio.rentACar.business.responses.additionalServiceResponses.AdditionalServiceResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
@@ -39,7 +39,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 				.map(additionalService -> modelMapperService.forResponse().map(additionalService,
 						AdditionalServiceResponse.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<AdditionalServiceResponse>>(additionalServiceResponse);
+		return new SuccessDataResult<List<AdditionalServiceResponse>>(additionalServiceResponse,"DATA.LISTED.SUCCESSFULLY");
 	}
 
 	@Override
@@ -47,22 +47,23 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		AdditionalService additionalService = modelMapperService.forRequest().map(createAdditionalServiceRequest,
 				AdditionalService.class);
 		additionalServiceRepository.save(additionalService);
-		return new SuccessResult();
+		return new SuccessResult("ADDITIONAL.SERVICE.ADDED");
 	}
 
 	@Override
 	public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
+		checkIfAdditionalServiceExistById(updateAdditionalServiceRequest.getId());
 		AdditionalService additionalService = modelMapperService.forRequest().map(updateAdditionalServiceRequest,
 				AdditionalService.class);
 		additionalServiceRepository.save(additionalService);
-		return new SuccessResult();
+		return new SuccessResult("ADDITIONAL.SERVICE.UPDATED");
 	}
 
 	@Override
 	public Result delete(int id) {
 		checkIfAdditionalServiceExistById(id);
 		additionalServiceRepository.deleteById(id);
-		return new SuccessResult();
+		return new SuccessResult("ADDITIONAL.SERVICE.DELETED");
 	}
 
 	private void checkIfAdditionalServiceExistById(int id) {

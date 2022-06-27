@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.rentACar.business.abstracts.BrandService;
-import com.kodlamaio.rentACar.business.requests.brands.CreateBrandRequest;
-import com.kodlamaio.rentACar.business.requests.brands.UpdateBrandRequest;
-import com.kodlamaio.rentACar.business.responses.brands.BrandResponse;
+import com.kodlamaio.rentACar.business.requests.brandRequests.CreateBrandRequest;
+import com.kodlamaio.rentACar.business.requests.brandRequests.UpdateBrandRequest;
+import com.kodlamaio.rentACar.business.responses.brandResponses.BrandResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
@@ -33,19 +33,7 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public Result add(CreateBrandRequest createBrandRequest) {
-
-		checkIfBrandExistByName(createBrandRequest.getName());
-		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
-		this.brandRepository.save(brand);
-
-		return new SuccessResult("BRAND.ADDED");
-
-	}
-
-	@Override
 	public DataResult<List<BrandResponse>> getAll() {
-		// mapping
 		List<Brand> brands = brandRepository.findAll();
 
 		List<BrandResponse> response = brands.stream()
@@ -57,15 +45,26 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public Result deleteById(int id) {
+	public DataResult<BrandResponse> getBrandById(int id) {
 		checkIfBrandExistById(id);
-		brandRepository.deleteById(id);
-		return new SuccessResult("BRAND.DELETED");
+		Brand brand = this.brandRepository.findById(id).get();
+		return new SuccessDataResult<>(modelMapperService.forResponse().map(brand, BrandResponse.class));
+	}
+
+	@Override
+	public Result add(CreateBrandRequest createBrandRequest) {
+
+		checkIfBrandExistByName(createBrandRequest.getName());
+		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
+		this.brandRepository.save(brand);
+
+		return new SuccessResult("BRAND.ADDED");
 
 	}
 
 	@Override
 	public Result update(UpdateBrandRequest updateBrandRequest) {
+		checkIfBrandExistById(updateBrandRequest.getId());
 		checkIfBrandExistByName(updateBrandRequest.getName());
 		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		brandRepository.save(brand);
@@ -74,10 +73,11 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public DataResult<BrandResponse> getBrandById(int id) {
+	public Result deleteById(int id) {
 		checkIfBrandExistById(id);
-		Brand brand = this.brandRepository.getById(id);
-		return new SuccessDataResult<>(modelMapperService.forResponse().map(brand, BrandResponse.class));
+		brandRepository.deleteById(id);
+		return new SuccessResult("BRAND.DELETED");
+
 	}
 
 	private void checkIfBrandExistByName(String name) {

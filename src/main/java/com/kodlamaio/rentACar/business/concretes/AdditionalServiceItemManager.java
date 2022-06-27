@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kodlamaio.rentACar.business.abstracts.AdditionalServiceItemService;
 import com.kodlamaio.rentACar.business.requests.additionalServiceItemRequests.CreateAdditionalServiceItemRequest;
 import com.kodlamaio.rentACar.business.requests.additionalServiceItemRequests.UpdateAdditionalServiceItemRequest;
-import com.kodlamaio.rentACar.business.responses.additionalServiceItems.AdditionalServiceItemResponse;
+import com.kodlamaio.rentACar.business.responses.additionalServiceItemResponses.AdditionalServiceItemResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
@@ -33,28 +33,14 @@ public class AdditionalServiceItemManager implements AdditionalServiceItemServic
 	}
 
 	@Override
-	public Result add(CreateAdditionalServiceItemRequest createAdditionalServiceItemRequest) {
-		checkIfAdditionalServiceItemExistByName(createAdditionalServiceItemRequest.getName());
-		AdditionalServiceItem additionalServiceItem = modelMapperService.forRequest()
-				.map(createAdditionalServiceItemRequest, AdditionalServiceItem.class);
-		additionalServiceItemRepository.save(additionalServiceItem);
-		return new SuccessResult();
-	}
+	public DataResult<List<AdditionalServiceItemResponse>> getAll() {
+		List<AdditionalServiceItem> additionalServiceItems = additionalServiceItemRepository.findAll();
+		List<AdditionalServiceItemResponse> additionalServiceItemResponses = additionalServiceItems.stream()
+				.map(additionalServiceItem -> modelMapperService.forResponse().map(additionalServiceItem,
+						AdditionalServiceItemResponse.class))
+				.collect(Collectors.toList());
 
-	@Override
-	public Result update(UpdateAdditionalServiceItemRequest updateAdditionalServiceItemRequest) {
-		checkIfAdditionalServiceItemExistByName(updateAdditionalServiceItemRequest.getName());
-		AdditionalServiceItem additionalServiceItem = modelMapperService.forRequest()
-				.map(updateAdditionalServiceItemRequest, AdditionalServiceItem.class);
-		additionalServiceItemRepository.save(additionalServiceItem);
-		return new SuccessResult();
-	}
-
-	@Override
-	public Result delete(int id) {
-		checkIfAdditionalServiceItemExistById(id);
-		additionalServiceItemRepository.deleteById(id);
-		return new SuccessResult();
+		return new SuccessDataResult<List<AdditionalServiceItemResponse>>(additionalServiceItemResponses,"DATA.LISTED.SUCCESSFULLY");
 	}
 
 	@Override
@@ -67,14 +53,29 @@ public class AdditionalServiceItemManager implements AdditionalServiceItemServic
 	}
 
 	@Override
-	public DataResult<List<AdditionalServiceItemResponse>> getAll() {
-		List<AdditionalServiceItem> additionalServiceItems = additionalServiceItemRepository.findAll();
-		List<AdditionalServiceItemResponse> additionalServiceItemResponses = additionalServiceItems.stream()
-				.map(additionalServiceItem -> modelMapperService.forResponse().map(additionalServiceItem,
-						AdditionalServiceItemResponse.class))
-				.collect(Collectors.toList());
+	public Result add(CreateAdditionalServiceItemRequest createAdditionalServiceItemRequest) {
+		checkIfAdditionalServiceItemExistByName(createAdditionalServiceItemRequest.getName());
+		AdditionalServiceItem additionalServiceItem = modelMapperService.forRequest()
+				.map(createAdditionalServiceItemRequest, AdditionalServiceItem.class);
+		additionalServiceItemRepository.save(additionalServiceItem);
+		return new SuccessResult("ADDITIONAL.SERVICE.ITEM.ADDED");
+	}
 
-		return new SuccessDataResult<List<AdditionalServiceItemResponse>>(additionalServiceItemResponses);
+	@Override
+	public Result update(UpdateAdditionalServiceItemRequest updateAdditionalServiceItemRequest) {
+		checkIfAdditionalServiceItemExistById(updateAdditionalServiceItemRequest.getId());
+		checkIfAdditionalServiceItemExistByName(updateAdditionalServiceItemRequest.getName());
+		AdditionalServiceItem additionalServiceItem = modelMapperService.forRequest()
+				.map(updateAdditionalServiceItemRequest, AdditionalServiceItem.class);
+		additionalServiceItemRepository.save(additionalServiceItem);
+		return new SuccessResult("ADDITIONAL.SERVICE.ITEM.UPDATED");
+	}
+
+	@Override
+	public Result delete(int id) {
+		checkIfAdditionalServiceItemExistById(id);
+		additionalServiceItemRepository.deleteById(id);
+		return new SuccessResult("ADDITIONAL.SERVICE.ITEM.DELETED");
 	}
 
 	private void checkIfAdditionalServiceItemExistByName(String name) {

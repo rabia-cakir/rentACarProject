@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodlamaio.rentACar.business.abstracts.RentalService;
-import com.kodlamaio.rentACar.business.requests.rentals.CreateRentalRequest;
-import com.kodlamaio.rentACar.business.requests.rentals.UpdateRentalRequest;
-import com.kodlamaio.rentACar.business.responses.rentals.RentalResponse;
+import com.kodlamaio.rentACar.business.requests.rentalRequests.CreateRentalRequest;
+import com.kodlamaio.rentACar.business.requests.rentalRequests.UpdateRentalRequest;
+import com.kodlamaio.rentACar.business.responses.rentalResponses.RentalResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 
@@ -29,9 +29,15 @@ public class RentalsController {
 		this.rentalService = rentalService;
 	}
 
-	@PostMapping("/add")
-	public Result add(@RequestBody CreateRentalRequest createRentalRequest) {
-		return rentalService.add(createRentalRequest);
+	@PostMapping("/addForIndividualCustomer")
+	public Result addForIndividualCustomer(@RequestBody CreateRentalRequest createRentalRequest) {
+		return rentalService.addForIndividualCustomer(createRentalRequest);
+
+	}
+
+	@PostMapping("/addForCorporateCustomer")
+	public Result addForCorporateCustomer(@RequestBody CreateRentalRequest createRentalRequest) {
+		return rentalService.addForCorporateCustomer(createRentalRequest);
 
 	}
 

@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import com.kodlamaio.rentACar.business.abstracts.BrandService;
 import com.kodlamaio.rentACar.business.abstracts.CarService;
 import com.kodlamaio.rentACar.business.abstracts.ColorService;
-import com.kodlamaio.rentACar.business.requests.cars.CreateCarRequest;
-import com.kodlamaio.rentACar.business.requests.cars.UpdateCarRequest;
-import com.kodlamaio.rentACar.business.responses.cars.CarResponse;
+import com.kodlamaio.rentACar.business.requests.carRequests.CreateCarRequest;
+import com.kodlamaio.rentACar.business.requests.carRequests.UpdateCarRequest;
+import com.kodlamaio.rentACar.business.responses.carResponses.CarResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
@@ -25,8 +25,6 @@ import com.kodlamaio.rentACar.entities.concretes.Car;
 @Service
 public class CarManager implements CarService {
 	private CarRepository carRepository;
-	private ColorService colorService;
-	private BrandService brandService;
 	private ModelMapperService modelMapperService;
 
 	@Autowired
@@ -34,18 +32,7 @@ public class CarManager implements CarService {
 			ColorService colorService) {
 
 		this.carRepository = carRepository;
-		this.colorService = colorService;
-		this.brandService = brandService;
 		this.modelMapperService = modelMapperService;
-	}
-
-	@Override
-	public Result add(CreateCarRequest createCarRequest) {
-		checkIfLicensePlateExist(createCarRequest.getLicensePlate());
-		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
-		checkNumberOfCars(car.getBrand().getId());
-		carRepository.save(car);
-		return new SuccessResult("CAR.ADDED");
 	}
 
 	@Override
@@ -58,16 +45,26 @@ public class CarManager implements CarService {
 		return new SuccessDataResult<>(response, "DATA.LISTED.SUCCESSFULLY");
 	}
 
-	@Override
-	public Result deleteById(int id) {
+	
+	public DataResult<CarResponse> getById(int id) {
 		checkIfCarExistById(id);
-		carRepository.deleteById(id);
-		return new SuccessResult("CAR.DELETED");
+		Car car = carRepository.findById(id).get();
+		return new SuccessDataResult<>(modelMapperService.forResponse().map(car, CarResponse.class));
 
 	}
 
 	@Override
+	public Result add(CreateCarRequest createCarRequest) {
+		checkIfLicensePlateExist(createCarRequest.getLicensePlate());
+		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
+		checkNumberOfCars(car.getBrand().getId());
+		carRepository.save(car);
+		return new SuccessResult("CAR.ADDED");
+	}
+
+	@Override
 	public Result update(UpdateCarRequest updateCarRequest) {
+		checkIfCarExistById(updateCarRequest.getId());
 		checkIfLicensePlateExist(updateCarRequest.getLicensePlate());
 		Car car = modelMapperService.forRequest().map(updateCarRequest, Car.class);
 		carRepository.save(car);
@@ -75,10 +72,11 @@ public class CarManager implements CarService {
 
 	}
 
-	public DataResult<CarResponse> getById(int id) {
+	@Override
+	public Result deleteById(int id) {
 		checkIfCarExistById(id);
-		Car car = carRepository.getById(id);
-		return new SuccessDataResult<>(modelMapperService.forResponse().map(car, CarResponse.class));
+		carRepository.deleteById(id);
+		return new SuccessResult("CAR.DELETED");
 
 	}
 
@@ -99,6 +97,13 @@ public class CarManager implements CarService {
 		Optional<Car> car = this.carRepository.findById(id);
 		if (car.isEmpty())
 			throw new BusinessException("CAR.IS.NOT.EXIST");
+	}
+
+	
+	public Car getCarById(int carId) {
+		checkIfCarExistById(carId);
+		return carRepository.findById(carId).get();
+
 	}
 
 }

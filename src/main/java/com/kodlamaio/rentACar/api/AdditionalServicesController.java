@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kodlamaio.rentACar.business.abstracts.AdditionalServiceService;
 import com.kodlamaio.rentACar.business.requests.additionalServiceRequests.CreateAdditionalServiceRequest;
 import com.kodlamaio.rentACar.business.requests.additionalServiceRequests.UpdateAdditionalServiceRequest;
-import com.kodlamaio.rentACar.business.responses.additionalServices.AdditionalServiceResponse;
+import com.kodlamaio.rentACar.business.responses.additionalServiceResponses.AdditionalServiceResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
 

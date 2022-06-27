@@ -24,7 +24,7 @@ public class RentACarApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RentACarApplication.class, args);
 	}
-	//spring bean anotasyonunu gördüğü zaman uygulama başlayınca bunu belleğe atar.
+	
 	@Bean
 	public ModelMapper getModelMapper()
 	{
@@ -32,7 +32,7 @@ public class RentACarApplication {
 	}
 	
 	@ExceptionHandler
-	@ResponseStatus(code=HttpStatus.BAD_REQUEST)//500 hatası dönüyor
+	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
 	public ErrorDataResult<Object> handleBusinessException(BusinessException businessException)
 	{
 		ErrorDataResult<Object> errorDataResult=new ErrorDataResult<Object>(businessException.getMessage(),"BUSINESS.EXCEPTION");
@@ -43,13 +43,13 @@ public class RentACarApplication {
 	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
 	public ErrorDataResult<Object> handleValidationException(MethodArgumentNotValidException methodArgumentNotValidException)
 	{
-		//hangi alanda hata oldu, hata ne
+	
 		Map<String,String> validationErrors=new HashMap<String,String>();
-		for(FieldError fieldError:methodArgumentNotValidException.getBindingResult().getFieldErrors())//hataları for each'le dönüyoruz
+		for(FieldError fieldError:methodArgumentNotValidException.getBindingResult().getFieldErrors())
 		{
-			validationErrors.put(fieldError.getField(),fieldError.getDefaultMessage());//her hata map olarak tanımladığımız validationErrors' ekleniyor.
+			validationErrors.put(fieldError.getField(),fieldError.getDefaultMessage());
 		}
-		ErrorDataResult<Object> errorDataResult=new ErrorDataResult<Object>(validationErrors, "VALIDATION.EXCEPTION");//validation'ı errordata result'a çeviriyoruz.
+		ErrorDataResult<Object> errorDataResult=new ErrorDataResult<Object>(validationErrors, "VALIDATION.EXCEPTION");
 		return errorDataResult;
 	
 		

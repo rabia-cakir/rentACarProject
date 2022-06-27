@@ -32,12 +32,9 @@ public class Maintenance {
 	private int id;
 	
 	@Column(name="dateSent")
-	@JsonFormat(pattern="yyyy-MM-dd")
 	private LocalDate dateSent;
 	
 	@Column(name="dateReturned")
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonFormat(pattern="yyyy-MM-dd")
 	private LocalDate dateReturned;
 	
 	@ManyToOne
