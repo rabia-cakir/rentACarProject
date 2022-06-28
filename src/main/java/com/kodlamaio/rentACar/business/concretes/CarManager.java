@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kodlamaio.rentACar.business.abstracts.BrandService;
 import com.kodlamaio.rentACar.business.abstracts.CarService;
-import com.kodlamaio.rentACar.business.abstracts.ColorService;
 import com.kodlamaio.rentACar.business.requests.carRequests.CreateCarRequest;
 import com.kodlamaio.rentACar.business.requests.carRequests.UpdateCarRequest;
 import com.kodlamaio.rentACar.business.responses.carResponses.CarResponse;
@@ -28,8 +26,7 @@ public class CarManager implements CarService {
 	private ModelMapperService modelMapperService;
 
 	@Autowired
-	public CarManager(CarRepository carRepository, ModelMapperService modelMapperService, BrandService brandService,
-			ColorService colorService) {
+	public CarManager(CarRepository carRepository, ModelMapperService modelMapperService) {
 
 		this.carRepository = carRepository;
 		this.modelMapperService = modelMapperService;
@@ -45,7 +42,6 @@ public class CarManager implements CarService {
 		return new SuccessDataResult<>(response, "DATA.LISTED.SUCCESSFULLY");
 	}
 
-	
 	public DataResult<CarResponse> getById(int id) {
 		checkIfCarExistById(id);
 		Car car = carRepository.findById(id).get();
@@ -99,7 +95,6 @@ public class CarManager implements CarService {
 			throw new BusinessException("CAR.IS.NOT.EXIST");
 	}
 
-	
 	public Car getCarById(int carId) {
 		checkIfCarExistById(carId);
 		return carRepository.findById(carId).get();
