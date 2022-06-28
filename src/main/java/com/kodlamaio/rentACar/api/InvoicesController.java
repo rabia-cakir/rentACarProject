@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
 import com.kodlamaio.rentACar.business.concretes.InvoiceManager;
 import com.kodlamaio.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceAdditionalServiceResponse;
+import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceCorporateCustomerResponse;
+import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceIndividualCustomerResponse;
 import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceRentalResponse;
 import com.kodlamaio.rentACar.core.utilities.results.DataResult;
 import com.kodlamaio.rentACar.core.utilities.results.Result;
@@ -21,33 +24,47 @@ import com.kodlamaio.rentACar.core.utilities.results.Result;
 @RequestMapping("/api/invoice")
 public class InvoicesController {
 
-	private InvoiceManager invoiceRentalManager;
+	private InvoiceService invoiceService;
 
-	public InvoicesController(InvoiceManager invoiceRentalManager) {
+	
+
+	public InvoicesController(InvoiceService invoiceService) {
 		super();
-		this.invoiceRentalManager = invoiceRentalManager;
+		this.invoiceService = invoiceService;
 	}
 
-	@GetMapping("/getRentalInvoice")
+	/*@GetMapping("/getRentalInvoice")
 	public DataResult<List<InvoiceRentalResponse>> getRentalInvoice() {
-		return invoiceRentalManager.getAllRentalInvoice();
-	}
+		return invoiceService.getAllRentalInvoice();
+	*/
 
-	@GetMapping("/getRentalAdditionalServiceInvoice")
+/*	@GetMapping("/getRentalAdditionalServiceInvoice")
 	public DataResult<List<InvoiceAdditionalServiceResponse>> getAdditionalServiceInvoice() {
-		return invoiceRentalManager.getAllAdditionalServiceInvoice();
+		return invoiceService.getAllAdditionalServiceInvoice();
 	}
+	*/
+	@GetMapping("getAllindividualCustomerInvoice")
+	public DataResult<List<InvoiceIndividualCustomerResponse>> getAllindividualCustomerInvoice(){
+		return this.invoiceService.getAllindividualCustomerInvoice();
+	}
+	
+	@GetMapping("getInvoiceCorporateCustomer")
+	
+	public DataResult<List<InvoiceCorporateCustomerResponse>> getAllcorporateCustomerInvoice(){
+		return this.invoiceService.getAllcorporateCustomerInvoice();
+	}
+	
 
 	
 	@PostMapping("/add")
 	public Result add(@RequestBody CreateInvoiceRequest createInvoiceRentalRequest) {
-		return invoiceRentalManager.add(createInvoiceRentalRequest);
+		return invoiceService.add(createInvoiceRentalRequest);
 	}
 
-	@DeleteMapping("/{id}")
+/*	@DeleteMapping("/{id}")
 
 	public Result delete(@PathVariable int id) {
-		return invoiceRentalManager.delete(id);
+		return invoiceService.delete(id);
 	}
-
+*/
 }

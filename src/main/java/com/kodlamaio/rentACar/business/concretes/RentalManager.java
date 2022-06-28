@@ -67,32 +67,31 @@ public class RentalManager implements RentalService {
 		checkIfCityExist(createRentalRequest.getPickUpCityId());
 		checkIfCityExist(createRentalRequest.getReturnCityId());
 		checkIfCustomerExist(createRentalRequest.getCustomerId());
-		checkIfCarAlreadyRented(createRentalRequest.getCarId());
+		// checkIfCarAlreadyRented(createRentalRequest.getCarId());
 		checkIfCarInMaintenance(createRentalRequest.getCarId());
 		checkDates(createRentalRequest.getPickUpDate(), createRentalRequest.getReturnDate());
 		checkIfFindexIsEnough(createRentalRequest.getCarId(), createRentalRequest.getCustomerId());
 		setStateAsRented(createRentalRequest.getCarId());
-		setTotalDays(createRentalRequest);
-		setTotalPrice(createRentalRequest);
 		Rental rental = modelMapperService.forRequest().map(createRentalRequest, Rental.class);
+		addTotalDays(rental, createRentalRequest);
+		addTotalPrice(rental, createRentalRequest);
 		rentalRepository.save(rental);
 		return new SuccessResult("RENTAL.ADDED.FOR.INDIVIDUAL.CUSTOMER");
 	}
 
 	@Override
 	public Result addForCorporateCustomer(CreateRentalRequest createRentalRequest) {
-
 		checkIfCarExist(createRentalRequest.getCarId());
 		checkIfCityExist(createRentalRequest.getPickUpCityId());
 		checkIfCityExist(createRentalRequest.getReturnCityId());
 		checkIfCustomerExist(createRentalRequest.getCustomerId());
-		checkIfCarAlreadyRented(createRentalRequest.getCarId());
+		//checkIfCarAlreadyRented(createRentalRequest.getCarId());
 		checkIfCarInMaintenance(createRentalRequest.getCarId());
 		checkDates(createRentalRequest.getPickUpDate(), createRentalRequest.getReturnDate());
 		setStateAsRented(createRentalRequest.getCarId());
-		setTotalDays(createRentalRequest);
-		setTotalPrice(createRentalRequest);
 		Rental rental = modelMapperService.forRequest().map(createRentalRequest, Rental.class);
+		addTotalDays(rental, createRentalRequest);
+		addTotalPrice(rental, createRentalRequest);
 		rentalRepository.save(rental);
 		return new SuccessResult("RENTAL.ADDED.FOR.CORPORATE.CUSTOMER");
 	}
@@ -112,41 +111,38 @@ public class RentalManager implements RentalService {
 		checkIfCityExist(updateRentalRequest.getReturnCityId());
 		checkIfCustomerExist(updateRentalRequest.getCustomerId());
 		checkIfCarInMaintenance(updateRentalRequest.getCarId());
-		updateTotalDays(updateRentalRequest);
-		updateTotalPrice(updateRentalRequest);
 		checkDates(updateRentalRequest.getPickUpDate(), updateRentalRequest.getReturnDate());
 		checkIfFindexIsEnough(updateRentalRequest.getCarId(), updateRentalRequest.getCustomerId());
 		Rental rental = modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
+		updateTotalDays(rental, updateRentalRequest);
+		updateTotalPrice(rental, updateRentalRequest);
 		rentalRepository.save(rental);
 		return new SuccessResult("RENTAL.UPDATED");
 
 	}
 
-	private void setTotalDays(CreateRentalRequest createRentalRequest) {
-		modelMapperService.forRequest().map(createRentalRequest, Rental.class).setTotalDays(
+	private void addTotalDays(Rental rental, CreateRentalRequest createRentalRequest) {
+		rental.setTotalDays(
 				findDayDifference(createRentalRequest.getPickUpDate(), createRentalRequest.getReturnDate()));
 	}
 
-	private void setTotalPrice(CreateRentalRequest createRentalRequest) {
-		Rental rental = modelMapperService.forRequest().map(createRentalRequest, Rental.class);
+	private void addTotalPrice(Rental rental, CreateRentalRequest createRentalRequest) {
 		double dailyPrice = getDailyPriceOfCar(createRentalRequest.getCarId());
 		rental.setTotalPrice(calculateTotalPrice(rental.getTotalDays(), dailyPrice,
 				createRentalRequest.getPickUpCityId(), createRentalRequest.getReturnCityId()));
 	}
 
-	private void updateTotalDays(UpdateRentalRequest updateRentalRequest) {
-		modelMapperService.forRequest().map(updateRentalRequest, Rental.class).setTotalDays(
+	private void updateTotalDays(Rental rental, UpdateRentalRequest updateRentalRequest) {
+		rental.setTotalDays(
 				findDayDifference(updateRentalRequest.getPickUpDate(), updateRentalRequest.getReturnDate()));
 	}
-	
-	private void updateTotalPrice(UpdateRentalRequest updateRentalRequest) {
-		Rental rental = modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
+
+	private void updateTotalPrice(Rental rental, UpdateRentalRequest updateRentalRequest) {
 		double dailyPrice = getDailyPriceOfCar(updateRentalRequest.getCarId());
 		rental.setTotalPrice(calculateTotalPrice(rental.getTotalDays(), dailyPrice,
 				updateRentalRequest.getPickUpCityId(), updateRentalRequest.getReturnCityId()));
 	}
 
-	
 	private double calculateTotalPrice(int totalDays, double dailyPrice, int pickUpCityId, int returnCityId) {
 		if (pickUpCityId == returnCityId)
 			return totalDays * dailyPrice;
@@ -158,7 +154,7 @@ public class RentalManager implements RentalService {
 
 		Period period = Period.between(pickUpDate, returnDate);
 		return Math.abs(period.getDays());
-
+		
 	}
 
 	private boolean checkIfFindexIsEnough(int carId, int customerId) {

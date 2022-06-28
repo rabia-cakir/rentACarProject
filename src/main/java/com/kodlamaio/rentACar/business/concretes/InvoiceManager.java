@@ -6,8 +6,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.kodlamaio.rentACar.business.abstracts.InvoiceService;
 import com.kodlamaio.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
 import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceAdditionalServiceResponse;
+import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceCorporateCustomerResponse;
+import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceIndividualCustomerResponse;
 import com.kodlamaio.rentACar.business.responses.invoiceResponses.InvoiceRentalResponse;
 import com.kodlamaio.rentACar.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.rentACar.core.utilities.mapping.ModelMapperService;
@@ -19,7 +22,7 @@ import com.kodlamaio.rentACar.dataAccess.abstracts.InvoiceRepository;
 import com.kodlamaio.rentACar.entities.concretes.Invoice;
 
 @Service
-public class InvoiceManager {
+public class InvoiceManager implements InvoiceService{
 	private InvoiceRepository invoiceRepository;
 	private ModelMapperService modelMapperService;
 
@@ -73,6 +76,29 @@ public class InvoiceManager {
 		Invoice invoice = invoiceRepository.findByRentalId(rentalId);
 		if (invoice != null)
 			throw new BusinessException("INVOICE.IS.ALREADY.EXIST");
+	}
+
+	
+
+	
+	@Override
+	public DataResult<List<InvoiceCorporateCustomerResponse>> getAllcorporateCustomerInvoice() {
+		// TODO Auto-generated method stub
+		List<Invoice> invoiceCorporateCustomers=invoiceRepository.findAll();
+		List<InvoiceCorporateCustomerResponse> response=invoiceCorporateCustomers.stream().map(
+				invoiceCorporateCustomer -> modelMapperService.forResponse().map(invoiceCorporateCustomer, InvoiceCorporateCustomerResponse.class))
+				.collect(Collectors.toList());
+		return new SuccessDataResult<List<InvoiceCorporateCustomerResponse>>(response,"CORPORATE.CUSTOMER.LISTED.SUCCESSFULLY");
+	}
+
+	@Override
+	public DataResult<List<InvoiceIndividualCustomerResponse>> getAllindividualCustomerInvoice() {
+		// TODO Auto-generated method stub
+		List<Invoice> invoiceIndividualCustomers=invoiceRepository.findAll();
+		List<InvoiceIndividualCustomerResponse> response=invoiceIndividualCustomers.stream().map(
+				invoiceIndividualCustomer -> modelMapperService.forResponse().map(invoiceIndividualCustomer, InvoiceIndividualCustomerResponse.class))
+				.collect(Collectors.toList());
+		return new SuccessDataResult<List<InvoiceIndividualCustomerResponse>>(response,"INDIVIDUAL.CUSTOMER.LISTED.SUCCESSFULLY");
 	}
 
 }
